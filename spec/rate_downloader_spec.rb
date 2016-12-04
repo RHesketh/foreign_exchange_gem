@@ -16,6 +16,10 @@ module ForeignExchange
       it "does not raise an error" do
         expect{RateDownloader.download}.not_to raise_error
       end
+
+      after(:each) do
+        ForeignExchange.reset
+      end
     end
   end
 end

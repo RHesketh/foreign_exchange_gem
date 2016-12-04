@@ -15,5 +15,25 @@ describe ForeignExchange do
 
       ForeignExchange::RateDownloader.download
     end
+
+    after(:each) do
+      ForeignExchange.reset
+    end
+  end
+
+  describe "#reset" do
+    before(:each) do
+      ForeignExchange.configure do |config|
+        config.rates_url = "A string"
+      end
+    end
+
+    it "resets the configuration" do
+      ForeignExchange.reset
+
+      config = ForeignExchange.configuration
+
+      expect(config.rates_url).to eq(nil)
+    end
   end
 end
