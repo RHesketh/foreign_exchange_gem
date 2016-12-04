@@ -2,6 +2,14 @@ require 'foreign_exchange'
 
 module ForeignExchange
   describe RateDownloader do
+    let(:dummy_file) {File.open(File.join("spec", "sample_data", "dummy.xml"))}
+
+    before(:each) do
+      allow(RateDownloader).to receive(:open) do |url|
+        dummy_file
+      end
+    end
+
     describe "#download" do
       it "raises an error if called when the rates_url has not been set" do
         expect{RateDownloader.download}.to raise_error(ConfigError)
