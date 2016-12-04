@@ -1,7 +1,31 @@
+require 'nokogiri'
+
 module ForeignExchange
   class ExchangeRate
     class << self
       attr_accessor :rates
+    end
+
+    def self.parse_rates(rates_path = nil)
+      rates_file_path = rates_path || File.join("storage", "rates.xml")
+      raise NoRatesFound unless File.exists?(rates_file_path)
+
+      self.rates = {}
+
+      rates_document = File.open(rates_file_path) { |f| Nokogiri::XML(f) }
+      daily_rates = rates_document.xpath("//xmlns:Cube[@time]")
+      daily_rates.each do |daily_rate|
+        date = daily_rate.attribute("time").value
+
+        rates[date] = {}
+        currencies = daily_rate.xpath(".//xmlns:Cube[@rate]")
+        currencies.each do |currency|
+          code = currency.attribute("currency").value
+          rate = currency.attribute("rate").value
+
+          rates[date][code] = rate.to_f
+        end
+      end
     end
 
     def self.at(date, base_currency, counter_currency)
@@ -17,5 +41,6 @@ module ForeignExchange
 
     class UnknownDate < StandardError; end
     class NoCurrencyData < StandardError; end
+    class NoRatesFound < StandardError; end
   end
 end
