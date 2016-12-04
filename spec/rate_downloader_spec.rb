@@ -17,6 +17,14 @@ module ForeignExchange
         expect{RateDownloader.download}.not_to raise_error
       end
 
+      it "Downloads a file and stores it locally as storage/rates.xml" do
+        RateDownloader.download
+
+        local_file_path = File.join("storage", "rates.xml")
+
+        expect(File.exists?(local_file_path)).to be true
+      end
+
       after(:each) do
         ForeignExchange.reset
       end
