@@ -1,6 +1,7 @@
 require "foreign_exchange/version"
 require "foreign_exchange/configuration"
 require "foreign_exchange/rate_downloader"
+require "foreign_exchange/exchange_rate"
 
 module ForeignExchange
   class << self
