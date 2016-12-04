@@ -8,6 +8,11 @@ module ForeignExchange
       date_key = date.strftime("%Y-%m-%d")
       raise UnknownDate unless rates.key?(date_key)
       raise NoCurrencyData unless rates[date_key].key?(base_currency) && rates[date_key].key?(counter_currency)
+
+      base_rate = rates[date_key][base_currency]
+      counter_rate = rates[date_key][counter_currency]
+
+      return (1 / base_rate) * (counter_rate / 1)
     end
 
     class UnknownDate < StandardError; end

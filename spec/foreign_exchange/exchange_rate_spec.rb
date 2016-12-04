@@ -29,6 +29,13 @@ module ForeignExchange
 
         expect{ExchangeRate.at(date, "USD", "???")}.to raise_error ExchangeRate::NoCurrencyData
       end
+
+      it "calculates the exchange rate between two currencies" do
+        date = Date.parse('2016-12-02')
+
+        expect(ExchangeRate.at(date, "USD", "GBP")).to eq(0.25)
+        expect(ExchangeRate.at(date, "GBP", "USD")).to eq(4)
+      end
     end
   end
 end
