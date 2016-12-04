@@ -1,25 +1,21 @@
 require 'foreign_exchange'
 
-describe ForeignExchange::RateDownloader do
-  describe "#configure" do
-    let(:test_url) { "http://example.com" }
-
-    before(:each) do
-      ForeignExchange::RateDownloader.configure do |config|
-        config.rates_url = test_url
+module ForeignExchange
+  describe RateDownloader do
+    describe "#download" do
+      it "raises an error if called when the rates_url has not been set" do
+        expect{RateDownloader.download}.to raise_error(ConfigError)
       end
     end
 
-    xit "rates_url defines the URL of the XML file to be downloaded" do
-      uri = URI(test_url)
-      require 'pry'; binding.pry
-      expect{}
-    end
-  end
+    context "When the rates URL has been specified" do
+      before (:each) do
+        ForeignExchange.configuration.rates_url = "http://example.com"
+      end
 
-  describe "#download" do
-    it "returns nil if there were no errors in execution" do
-      expect(ForeignExchange::RateDownloader.download).to be_nil
+      it "does not raise an error" do
+        expect{RateDownloader.download}.not_to raise_error
+      end
     end
   end
 end

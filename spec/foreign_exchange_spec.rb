@@ -11,9 +11,7 @@ describe ForeignExchange do
     end
 
     it "rates_url defines the URL of the XML file to be downloaded" do
-      uri = URI(test_url)
-
-      expect(Net::HTTP).to receive(:start).with(uri.host, uri.port).and_call_original
+      expect(URI).to receive(:parse).with(test_url).and_call_original
 
       ForeignExchange::RateDownloader.download
     end

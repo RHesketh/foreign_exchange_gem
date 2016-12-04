@@ -14,4 +14,6 @@ module ForeignExchange
   def self.configure
     yield(configuration)
   end
+
+  class ConfigError < StandardError; end
 end
