@@ -38,6 +38,10 @@ module ForeignExchange
           end
         end
       end
+
+      def currencies
+        rates.first[1].keys
+      end
     end
 
     class UnknownDate < StandardError; end

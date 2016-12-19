@@ -66,5 +66,20 @@ module ForeignExchange
         expect(ExchangeRate.at(date, "GBP", "USD")).to eq(4)
       end
     end
+
+    describe "#currencies" do
+      before(:each) do
+        ExchangeRate.rates = {
+          '2016-12-02' => {
+            'USD' => 2.0,
+            'GBP' => 0.5
+          }
+        }
+      end
+
+      it "Returns an array for every currency we have data for" do
+        expect(ExchangeRate.currencies).to eq ["USD", "GBP"]
+      end
+    end
   end
 end
