@@ -50,6 +50,13 @@ The project contains integration and unit tests written in RSpec, they can be ru
 
 `rspec spec`
 
+# Development Notes
+### Gem configuration
+I did not want this gem to depend on a specific framework or to make assumptions about the environment where it would be used. The configuration and rates downloading are all handled internally so that they can be called from any kind of Ruby project.
+
+### Rates storage
+I had considered that the spec might call for historical data to be stored going back a long time, beyond the days in the latest XML file. I decided that this would be a lot of effort to implement in the time given, especially considering the configuration implications of a gem that requires a database but does not depend on Rails or similar. A locally stored XML file seemed like a good solution, although a read-only SQLite DB would also be an option if the data had a more complicated structure or could benefit from being queried.
+
 ## License
 
 All code, text and images found in this repository are licensed using the [Unlicense](http://unlicense.org/) and are free to use for whatever you like.
