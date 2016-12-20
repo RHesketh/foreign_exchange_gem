@@ -40,6 +40,7 @@ module ForeignExchange
       end
 
       def currencies
+        return [] if rates.nil? || rates.empty?
         rates.first[1].keys
       end
     end
