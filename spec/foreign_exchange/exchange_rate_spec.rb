@@ -68,17 +68,25 @@ module ForeignExchange
     end
 
     describe "#currencies" do
-      before(:each) do
-        ExchangeRate.rates = {
-          '2016-12-02' => {
-            'USD' => 2.0,
-            'GBP' => 0.5
+      describe "When currency data has been loaded" do
+        before(:each) do
+          ExchangeRate.rates = {
+            '2016-12-02' => {
+              'USD' => 2.0,
+              'GBP' => 0.5
+            }
           }
-        }
+        end
+
+        it "Returns an array for every currency we have data for" do
+          expect(ExchangeRate.currencies).to eq ["USD", "GBP"]
+        end
       end
 
-      it "Returns an array for every currency we have data for" do
-        expect(ExchangeRate.currencies).to eq ["USD", "GBP"]
+      describe "When currency data has not been loaded" do
+        it "Raises an error" do
+          expect{ExchangeRate.currencies}.to raise_error ExchangeRate::NoCurrencyData
+        end
       end
     end
   end
