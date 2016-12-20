@@ -50,7 +50,7 @@ The project contains integration and unit tests written in RSpec, they can be ru
 
 `rspec spec`
 
-# Development Notes
+## Development Notes
 ### Gem configuration
 I did not want this gem to depend on a specific framework or to make assumptions about the environment where it would be used. The configuration and rates downloading are all handled internally so that they can be called from any kind of Ruby project.
 
