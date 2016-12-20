@@ -1,41 +1,55 @@
-# ForeignExchange
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/foreign_exchange`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+# Foreign Exchange
+Foreign Exchange Web Frontend is a small Ruby gem allowing the downloading and checking of foreign exchange rate data. It can be included in a Rails project but does not require Rails.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Include the gem in your application's Gemfile
 
-```ruby
-gem 'foreign_exchange'
+`gem 'foreign_exchange', path: 'your/local/gem/path'`
+
+When your application starts up, the rates must be loaded into memory. Add some code that will run every time your application starts (this could be in an initializer for a Rails project) and execute the following code:
+
+```
+using 'foreign_exchange'
+
+ForeignExchange::ExchangeRate.parse_rates
 ```
 
-And then execute:
+You'll need to tell the gem how to download your rate data before you can use it. I suggest a rake task along the following lines:
 
-    $ bundle
+```
+require 'foreign_exchange'
 
-Or install it yourself as:
+ForeignExchange.configure do |config|
+  config.rates_url = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
+end
 
-    $ gem install foreign_exchange
+namespace :rates do
+  desc "Downloads the latest rates from the URL specified"
+  task download: :environment do
+    ForeignExchange::RateDownloader.download
+  end
+end
+```
 
 ## Usage
+Once the gem has been loaded, you can use it by calling:
 
-TODO: Write usage instructions here
+`ForeignExchange::ExchangeRate.at([date], [from_currency], [to_currency])`
 
-## Development
+For example:
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```
+ForeignExchange::ExchangeRate.at(Date.today, 'USD', 'GBP')
+> 1.4244224426
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Tests
 
-## Contributing
+The project contains integration and unit tests written in RSpec, they can be run using:
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/foreign_exchange. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
-
+`rspec spec`
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+All code, text and images found in this repository are licensed using the [Unlicense](http://unlicense.org/) and are free to use for whatever you like.
