@@ -9,10 +9,11 @@ module ForeignExchange
       def at(date, base_currency, counter_currency)
         date_key = date.strftime("%Y-%m-%d")
         raise UnknownDate unless rates.key?(date_key)
-        raise NoCurrencyData unless rates[date_key].key?(base_currency) && rates[date_key].key?(counter_currency)
+        raise NoCurrencyData unless rates[date_key].key?(base_currency) || base_currency == "EUR"
+        raise NoCurrencyData unless rates[date_key].key?(counter_currency) || counter_currency == "EUR"
 
-        base_rate = rates[date_key][base_currency]
-        counter_rate = rates[date_key][counter_currency]
+        base_rate = base_currency == "EUR" ? 1.0 : rates[date_key][base_currency]
+        counter_rate = counter_currency == "EUR" ? 1.0 : rates[date_key][counter_currency]
 
         return (1 / base_rate) * (counter_rate / 1)
       end
@@ -41,7 +42,7 @@ module ForeignExchange
 
       def currencies
         return [] if rates.nil? || rates.empty?
-        rates.first[1].keys
+        ["EUR"] + rates.first[1].keys
       end
     end
 

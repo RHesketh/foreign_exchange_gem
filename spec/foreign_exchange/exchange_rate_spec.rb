@@ -65,6 +65,13 @@ module ForeignExchange
         expect(ExchangeRate.at(date, "USD", "GBP")).to eq(0.25)
         expect(ExchangeRate.at(date, "GBP", "USD")).to eq(4)
       end
+
+      it "has an implicit 'EUR' currency of rate 1.0" do
+        date = Date.parse('2016-12-02')
+
+        expect(ExchangeRate.at(date, "EUR", "USD")).to eq(2.0)
+        expect(ExchangeRate.at(date, "EUR", "GBP")).to eq(0.5)
+      end
     end
 
     describe "#currencies" do
@@ -79,13 +86,18 @@ module ForeignExchange
         end
 
         it "Returns an array for every currency we have data for" do
-          expect(ExchangeRate.currencies).to eq ["USD", "GBP"]
+          # Includes an implicit "EUR" currency
+          expect(ExchangeRate.currencies).to eq ["EUR", "USD", "GBP"]
         end
       end
 
       describe "When currency data has not been loaded" do
-        it "Raises an error" do
-          expect{ExchangeRate.currencies}.to raise_error ExchangeRate::NoCurrencyData
+        before(:each) do
+          ExchangeRate.rates = {}
+        end
+
+        it "Returns a blank array" do
+          expect(ExchangeRate.currencies).to eq([])
         end
       end
     end
