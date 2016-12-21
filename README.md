@@ -15,7 +15,14 @@ using 'foreign_exchange'
 ForeignExchange::ExchangeRate.parse_rates
 ```
 
-You'll need to tell the gem how to download your rate data before you can use it. I suggest a rake task along the following lines:
+The rate data is downloaded whenever `RateDownloader.download` is called. Before downloading, the url of the rates data must be set using a configure block, like this:
+```
+ForeignExchange.configure do |config|
+  config.rates_url = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
+end
+```
+
+The easiest way to download rate data is to create a rake task. Here is a basic rake task that could be automatically run on a schedule:
 
 ```
 require 'foreign_exchange'
